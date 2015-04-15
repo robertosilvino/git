@@ -49,14 +49,14 @@ platforms:
     username: ec2-user
     ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
 
-- name: fedora-21
-  driver_plugin: digital_ocean
-  driver_config:
-    size: 2gb
-    image: fedora-21-x64
-    region: <%= ENV['DIGITALOCEAN_REGION'] %>
-    ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
-    ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+# - name: fedora-21
+#   driver_plugin: digital_ocean
+#   driver_config:
+#     size: 2gb
+#     image: fedora-21-x64
+#     region: <%= ENV['DIGITALOCEAN_REGION'] %>
+#     ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
+#     ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
 
 - name: debian-7.0
   driver_plugin: digital_ocean
@@ -97,13 +97,18 @@ suites:
   - recipe[git]
   attributes: {}
 
-# - name: source
-#   excludes: ["ubuntu-12.04", "ubuntu-10.04"]
-#   run_list:
-#   - recipe[git::source]
-#   attributes: {}
+- name: source
+  excludes: ["ubuntu-12.04", "ubuntu-10.04"]
+  run_list:
+  - recipe[git::source]
+  attributes: {}
 
-# - name: server
-#   run_list:
-#   - recipe[git::server]
-#   attributes: {}
+- name: server
+  includes: [ 
+    'centos6.5', 
+    'amazon-2014.09', 
+    'debian-7.0' 
+    ]
+  run_list:
+  - recipe[git::server]
+  attributes: {}
