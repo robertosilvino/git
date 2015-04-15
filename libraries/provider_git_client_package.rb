@@ -4,6 +4,8 @@ class Chef
       class Package < Chef::Provider::GitClient
         include Chef::DSL::IncludeRecipe
 
+        provides :git_client, os: 'linux' if respond_to?(:provides)
+
         action :install do
           # FIXME: rhel 5
           include_recipe 'yum-epel' if node['platform_version'].to_i == 5

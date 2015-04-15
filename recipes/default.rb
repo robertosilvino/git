@@ -17,6 +17,5 @@
 # limitations under the License.
 
 git_client 'default' do
-  provider Chef::Provider::GitClient::Package
   action :install
 end

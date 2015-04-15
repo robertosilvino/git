@@ -25,10 +25,8 @@ supports 'ubuntu'
 supports 'windows'
 
 depends 'build-essential'
-depends 'dmg'
-depends 'runit', '>= 1.0'
 depends 'windows'
-depends 'yum', '~> 3.0'
+depends 'dmg'
 depends 'yum-epel'
 
 attribute 'git/server/base_path',

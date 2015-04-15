@@ -1,12 +1,18 @@
-#<% require 'kitchen-sync' %>
 ---
+driver:
+  name: vagrant
+  forward_agent: yes
+  customize:
+    cpus: 4
+    memory: 4096
+
 driver_config:
-  digitalocean_api_token: <%= ENV['DIGITALOCEAN_API_TOKEN'] %>
-  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
-  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
-  aws_ssh_key_id: <%= ENV['AWS_KEYPAIR_NAME'] %>
-  flavor_id: <%= ENV['EC2_FLAVOR_ID'] %>
-  availability_zone: <%= ENV['AWS_AVAILABILITY_ZONE'] %>
+   digitalocean_api_token: <%= ENV['DIGITALOCEAN_API_TOKEN'] %>
+   aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+   aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+   aws_ssh_key_id: <%= ENV['AWS_KEYPAIR_NAME'] %>
+   flavor_id: <%= ENV['EC2_FLAVOR_ID'] %>
+   availability_zone: <%= ENV['AWS_AVAILABILITY_ZONE'] %>
 
 provisioner:
   name: chef_zero
@@ -49,14 +55,14 @@ platforms:
     username: ec2-user
     ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
 
-# - name: fedora-21
-#   driver_plugin: digital_ocean
-#   driver_config:
-#     size: 2gb
-#     image: fedora-21-x64
-#     region: <%= ENV['DIGITALOCEAN_REGION'] %>
-#     ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
-#     ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+- name: fedora-21
+  driver_plugin: digital_ocean
+  driver_config:
+    size: 2gb
+    image: fedora-21-x64
+    region: <%= ENV['DIGITALOCEAN_REGION'] %>
+    ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
+    ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
 
 - name: debian-7.0
   driver_plugin: digital_ocean
@@ -81,6 +87,7 @@ platforms:
   - recipe[apt]
 
 - name: ubuntu-14.04
+  driver_plugin: vagrant
   driver_plugin: digital_ocean
   driver_config:
     size: 2gb
@@ -98,17 +105,22 @@ suites:
   attributes: {}
 
 - name: source
-  excludes: ["ubuntu-12.04", "ubuntu-10.04"]
   run_list:
   - recipe[git::source]
+  excludes: ["ubuntu-12.04", "ubuntu-10.04"]
   attributes: {}
 
 - name: server
-  includes: [ 
+  run_list:
+  - recipe[git::server]
+  includes: [
     'centos6.5', 
     'amazon-2014.09', 
     'debian-7.0' 
     ]
+  attributes: {}
+
+- name: server
   run_list:
   - recipe[git::server]
   attributes: {}
