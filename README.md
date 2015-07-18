@@ -79,6 +79,10 @@ Installs git from source.
 
 Installs git client on Windows
 
+## ppa
+
+Installs git from ppa repository (Ubuntu only)
+
 Usage
 =====
 
